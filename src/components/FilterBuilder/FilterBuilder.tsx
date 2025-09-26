@@ -6,6 +6,7 @@ import { useFilterState } from '@/hooks/useFilterState';
 import FilterGroup from '@/components/FilterGroup';
 import { serializeFilter, deserializeFilter } from '@/utils/serialization';
 import styles from './FilterBuilder.module.css';
+import { generateQueryString, generateRequestBody } from '@/utils/api';
 
 const FilterBuilder: React.FC<FilterBuilderProps> = ({
   schema,
@@ -22,8 +23,12 @@ const FilterBuilder: React.FC<FilterBuilderProps> = ({
   // Emit changes
   useEffect(() => {
     const serialized = serializeFilter(filterState);
-    onChange?.(serialized);
-    apiConfig?.onFilterChange(serialized);
+   const result = apiConfig?.mode === 'GET'
+     ? generateQueryString(serialized)
+     : generateRequestBody(serialized);
+
+   onChange?.(serialized, result as string);
+   apiConfig?.onFilterChange(serialized, result as string)
   }, [filterState, onChange, apiConfig]);
 
   return (
