@@ -1,4 +1,4 @@
-# React Filter Builder - Frontend Coding Challenge
+# React Filter Builder
 
 A comprehensive, reusable Filter Builder UI library built with React and TypeScript that allows users to construct complex nested filtering conditions with an intuitive visual interface.
 
