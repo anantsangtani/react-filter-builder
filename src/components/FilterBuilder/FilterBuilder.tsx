@@ -1,12 +1,13 @@
 // src/components/FilterBuilder/FilterBuilder.tsx
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FilterBuilderProps } from '@/types/component';
 import { useFilterState } from '@/hooks/useFilterState';
-import FilterGroup from '@/components/FilterGroup';
+import { FilterState } from '@/types/filter';
+import FilterTreeNav from '@/components/FilterTreeNav';
+import FilterGroupEditor from '@/components/FilterGroupEditor';
 import { serializeFilter, deserializeFilter } from '@/utils/serialization';
-import styles from './FilterBuilder.module.css';
 import { generateQueryString, generateRequestBody } from '@/utils/api';
+import styles from './FilterBuilder.module.css';
 
 const FilterBuilder: React.FC<FilterBuilderProps> = ({
   schema,
@@ -17,30 +18,79 @@ const FilterBuilder: React.FC<FilterBuilderProps> = ({
   validation,
 }) => {
   // Convert JSON to state if provided
-  const hasInitial = initialFilter && Object.keys(initialFilter).length > 0;
-  const initialState = hasInitial ? deserializeFilter(initialFilter!) : undefined;
+  const initialState = initialFilter ? deserializeFilter(initialFilter) : undefined;
   const [filterState, dispatch] = useFilterState(initialState);
+  const [currentGroupId, setCurrentGroupId] = useState<string>(filterState.id);
+
+  // Update currentGroupId when filterState changes (e.g., on reset or initial load)
+  useEffect(() => {
+    setCurrentGroupId(filterState.id);
+  }, [filterState.id]);
 
   // Emit changes
   useEffect(() => {
     const serialized = serializeFilter(filterState);
-   const result = apiConfig?.mode === 'GET'
-     ? generateQueryString(serialized)
-     : generateRequestBody(serialized);
-
-   onChange?.(serialized, result as string);
-   apiConfig?.onFilterChange(serialized, result as string)
+    const result = apiConfig?.mode === 'GET'
+      ? generateQueryString(serialized)
+      : generateRequestBody(serialized);
+    
+    onChange?.(serialized, result as string);
+    apiConfig?.onFilterChange?.(serialized, result as string);
   }, [filterState, onChange, apiConfig]);
 
+  // Find current group being edited
+  const findGroupById = (state: FilterState, id: string): FilterState | null => {
+    if (state.id === id) return state;
+    if (state.children) {
+      for (const child of state.children) {
+        const found = findGroupById(child, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  const currentGroup = findGroupById(filterState, currentGroupId) || filterState;
+  
+  // Breadcrumb path to current group
+  const getPathToGroup = (state: FilterState, targetId: string, path: FilterState[] = []): FilterState[] | null => {
+    const currentPath = [...path, state];
+    if (state.id === targetId) return currentPath;
+    
+    if (state.children) {
+      for (const child of state.children) {
+        const found = getPathToGroup(child, targetId, currentPath);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  const breadcrumbPath = getPathToGroup(filterState, currentGroupId) || [filterState];
+
   return (
-    <div className={styles.container} data-testid="filter-builder">
-      <FilterGroup
-        filter={filterState}
-        schema={schema}
-        dispatch={dispatch}
-        disabled={disabled}
-        level={0}
-      />
+    <div className={styles.container}>
+      <div className={styles.leftPanel}>
+        <FilterTreeNav
+          rootGroup={filterState}
+          currentGroupId={currentGroupId}
+          onGroupSelect={setCurrentGroupId}
+          dispatch={dispatch}
+          schema={schema}
+          disabled={disabled}
+        />
+      </div>
+      
+      <div className={styles.rightPanel}>
+        <FilterGroupEditor
+          group={currentGroup}
+          breadcrumbPath={breadcrumbPath}
+          onGroupSelect={setCurrentGroupId}
+          dispatch={dispatch}
+          schema={schema}
+          disabled={disabled}
+        />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,3 @@
-// Update src/hooks/useFilterState.ts to fix ADD_CONDITION and ADD_GROUP recursion
-
 import { useReducer } from 'react';
 import { FilterState, LogicalOperator } from '@/types/filter';
 import { FilterAction } from '@/types/filterActions';
@@ -14,12 +12,15 @@ function updateNode(
   if (current.id === id) {
     return updater(current);
   }
+  
   if (current.children) {
+    const updatedChildren = current.children.map(child => updateNode(child, id, updater));
     return {
       ...current,
-      children: current.children.map(child => updateNode(child, id, updater)),
+      children: updatedChildren,
     };
   }
+  
   return current;
 }
 
@@ -27,38 +28,65 @@ function updateNode(
 function removeNode(current: FilterState, id: string): FilterState {
   if (current.children) {
     const filteredChildren = current.children.filter(child => child.id !== id);
+    const updatedChildren = filteredChildren.map(child => removeNode(child, id));
     return {
       ...current,
-      children: filteredChildren.map(child => removeNode(child, id)),
+      children: updatedChildren,
     };
   }
   return current;
 }
 
-// Reducer function
+// Reducer function with better error handling
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
   switch (action.type) {
     case 'ADD_CONDITION':
-      return updateNode(state, action.groupId, node => ({
-        ...node,
-        children: [...(node.children || []), action.condition],
-      }));
+      const stateAfterAddCondition = updateNode(state, action.groupId, node => {
+        if (node.type !== 'group') {
+          console.warn('Trying to add condition to non-group node:', node);
+          return node;
+        }
+        return {
+          ...node,
+          children: [...(node.children || []), action.condition],
+        };
+      });
+      return stateAfterAddCondition;
 
     case 'ADD_GROUP':
-      return updateNode(state, action.parentId, node => ({
-        ...node,
-        children: [...(node.children || []), action.group],
-      }));
+      const stateAfterAddGroup = updateNode(state, action.parentId, node => {
+        if (node.type !== 'group') {
+          console.warn('Trying to add group to non-group node:', node);
+          return node;
+        }
+        return {
+          ...node,
+          children: [...(node.children || []), action.group],
+        };
+      });
+      return stateAfterAddGroup;
 
     case 'UPDATE_CONDITION':
-      return updateNode(state, action.id, (node) => ({...node, ...action.updates}));
+      return updateNode(state, action.id, (node) => {
+        if (node.type !== 'condition') {
+          console.warn('Trying to update non-condition node:', node);
+          return node;
+        }
+        return { ...node, ...action.updates };
+      });
 
     case 'REMOVE_CONDITION':
     case 'REMOVE_GROUP':
       return removeNode(state, action.id);
 
     case 'UPDATE_GROUP':
-      return updateNode(state, action.id, node => ({...node, operator: action.operator}));
+      return updateNode(state, action.id, node => {
+        if (node.type !== 'group') {
+          console.warn('Trying to update operator on non-group node:', node);
+          return node;
+        }
+        return { ...node, operator: action.operator };
+      });
 
     case 'RESET':
       return createEmptyGroup('and');
@@ -68,7 +96,9 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
   }
 }
 
-// Hook
+// Hook with debug logging
 export function useFilterState(initialFilter?: FilterState) {
-  return useReducer(filterReducer, initialFilter || createEmptyGroup('and'));
+  const initial = initialFilter || createEmptyGroup('and');
+  
+  return useReducer(filterReducer, initial);
 }

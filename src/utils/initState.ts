@@ -1,20 +1,26 @@
 // src/utils/initState.ts
+import { FilterState, LogicalOperator } from '@/types/filter';
 
-import { FilterState, LogicalOperator } from '../types/filter';
-
-// Simple unique ID generator fallback
+// Generate a simple unique ID
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 }
 
-export const createEmptyGroup = (operator: LogicalOperator = 'and'): FilterState => ({
-  id: generateId(),
-  type: 'group',
-  operator,
-  children: []
-});
+export function createEmptyGroup(operator: LogicalOperator = 'and'): FilterState {
+  return {
+    id: generateId(),
+    type: 'group',
+    operator,
+    children: [],
+  };
+}
 
-export const createEmptyCondition = (): FilterState => ({
-  id: generateId(),
-  type: 'condition'
-});
+export function createEmptyCondition(): FilterState {
+  return {
+    id: generateId(),
+    type: 'condition',
+    field: undefined,
+    conditionOperator: undefined,
+    value: undefined,
+  };
+}
