@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FieldConfig } from '@/types/schema';
+import styles from './ValueInput.module.css';
 
 interface ValueInputProps {
   fieldConfig: FieldConfig;
@@ -26,33 +27,36 @@ const ValueInput: React.FC<ValueInputProps> = ({
   if (operator === 'between') {
     const [min = '', max = ''] = values || [];
     return (
-      <>
+      <div className={`${styles.inputGroup} ${styles.betweenInputs}`}>
         <input
-          type={type === 'number' ? 'number' : 'text'}
+          className={styles.input}
+          type={type === 'number' ? 'number' : type === 'date' ? 'date' : 'text'}
           placeholder="Min"
           value={min}
           disabled={disabled}
           onChange={(e) => onChange(undefined, [e.target.value, max])}
         />
         <input
-          type={type === 'number' ? 'number' : 'text'}
+          className={styles.input}
+          type={type === 'number' ? 'number' : type === 'date' ? 'date' : 'text'}
           placeholder="Max"
           value={max}
           disabled={disabled}
           onChange={(e) => onChange(undefined, [min, e.target.value])}
         />
-      </>
+      </div>
     );
   }
 
   if (type === 'boolean') {
     return (
       <select
+        className={styles.select}
         value={String(value)}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value === 'true')}
       >
-        <option value="">Select</option>
+        <option value="">Select Value</option>
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
@@ -62,6 +66,7 @@ const ValueInput: React.FC<ValueInputProps> = ({
   if (type === 'date') {
     return (
       <input
+        className={styles.input}
         type="date"
         value={value || ''}
         disabled={disabled}
@@ -73,11 +78,12 @@ const ValueInput: React.FC<ValueInputProps> = ({
   if (options) {
     return (
       <select
+        className={styles.select}
         value={value || ''}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
       >
-        <option value="">Select</option>
+        <option value="">Select Option</option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
@@ -89,9 +95,11 @@ const ValueInput: React.FC<ValueInputProps> = ({
 
   return (
     <input
+      className={styles.input}
       type={type === 'number' ? 'number' : 'text'}
       value={value || ''}
       disabled={disabled}
+      placeholder={`Enter ${fieldConfig.label.toLowerCase()}`}
       onChange={(e) => onChange(type === 'number' ? +e.target.value : e.target.value)}
     />
   );

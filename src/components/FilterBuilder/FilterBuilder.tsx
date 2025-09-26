@@ -5,6 +5,7 @@ import { FilterBuilderProps } from '@/types/component';
 import { useFilterState } from '@/hooks/useFilterState';
 import FilterGroup from '@/components/FilterGroup';
 import { serializeFilter, deserializeFilter } from '@/utils/serialization';
+import styles from './FilterBuilder.module.css';
 
 const FilterBuilder: React.FC<FilterBuilderProps> = ({
   schema,
@@ -26,7 +27,7 @@ const FilterBuilder: React.FC<FilterBuilderProps> = ({
   }, [filterState, onChange, apiConfig]);
 
   return (
-    <div data-testid="filter-builder">
+    <div className={styles.container} data-testid="filter-builder">
       <FilterGroup
         filter={filterState}
         schema={schema}

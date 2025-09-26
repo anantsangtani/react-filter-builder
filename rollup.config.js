@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import terser from '@rollup/plugin-terser';
+import autoprefixer from 'autoprefixer';
 
 export default {
   input: 'src/index.ts',
@@ -30,11 +31,11 @@ export default {
     declarationDir: 'dist/types',
     exclude: ['**/*.test.*', '**/*.stories.*'],
     }),
-    postcss({
-      extract: 'styles.css',
-      minimize: true,
-      modules: true,
-    }),
     terser(),
+    postcss({
+      modules: true,
+      plugins: [autoprefixer()],
+      extract: true,
+    }),
   ],
 };

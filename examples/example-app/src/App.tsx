@@ -1,5 +1,8 @@
+// examples/example-app/src/App.tsx
+
 import { FilterBuilder } from 'react-filter-builder';
 import { usersSchema } from './schemas';
+import './index.css';
 
 function App() {
   const initialFilter = { and: [{ field: 'age', operator: 'gt', value: 18 }] };
@@ -10,8 +13,8 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Filter Builder Example</h1>
+    <div className="app-container">
+      <h1>🔍 Advanced Filter Builder</h1>
       <FilterBuilder
         schema={usersSchema}
         initialFilter={initialFilter}

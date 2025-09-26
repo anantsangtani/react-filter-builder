@@ -5,6 +5,8 @@ import { FilterState, LogicalOperator } from '@/types/filter';
 import { SchemaConfig } from '@/types/schema';
 import { FilterAction } from '@/types/filterActions';
 import FilterCondition from '@/components/FilterCondition';
+import { createEmptyGroup, createEmptyCondition } from '@/utils/initState';
+import styles from './FilterGroup.module.css';
 
 interface FilterGroupProps {
   filter: FilterState;
@@ -24,20 +26,25 @@ const FilterGroup: React.FC<FilterGroupProps> = ({
   const children = filter.children || [];
 
   return (
-    <div data-testid={`filter-group-${filter.id}`} style={{ marginLeft: level * 20 }}>
-      <div>
+    <div className={styles.group} style={{ marginLeft: level * 20 }}>
+      <div className={styles.controls}>
         <select
+          className={styles.operatorSelect}
           value={filter.operator}
           onChange={(e) =>
             dispatch({ type: 'UPDATE_GROUP', id: filter.id, operator: e.target.value as LogicalOperator })
           }
           disabled={disabled}
         >
-          <option value="and">ALL</option>
-          <option value="or">ANY</option>
+          <option value="and">ALL of the following</option>
+          <option value="or">ANY of the following</option>
         </select>
         {level > 0 && (
-          <button onClick={() => dispatch({ type: 'REMOVE_GROUP', id: filter.id })} disabled={disabled}>
+          <button 
+            className={styles.removeButton}
+            onClick={() => dispatch({ type: 'REMOVE_GROUP', id: filter.id })} 
+            disabled={disabled}
+          >
             Remove Group
           </button>
         )}
@@ -45,18 +52,47 @@ const FilterGroup: React.FC<FilterGroupProps> = ({
 
       {children.map((child) =>
         child.type === 'condition' ? (
-          <FilterCondition key={child.id} condition={child} schema={schema} dispatch={dispatch} disabled={disabled} />
+          <FilterCondition 
+            key={child.id} 
+            condition={child} 
+            schema={schema} 
+            dispatch={dispatch} 
+            disabled={disabled} 
+          />
         ) : (
-          <FilterGroup key={child.id} filter={child} schema={schema} dispatch={dispatch} disabled={disabled} level={level + 1} />
+          <FilterGroup 
+            key={child.id} 
+            filter={child} 
+            schema={schema} 
+            dispatch={dispatch} 
+            disabled={disabled} 
+            level={level + 1} 
+          />
         )
       )}
 
-      <div>
-        <button onClick={() => dispatch({ type: 'ADD_CONDITION', groupId: filter.id, condition: { id: '', type: 'condition' } })} disabled={disabled}>
-          + Condition
+      <div className={styles.addButtons}>
+        <button 
+          className={styles.addButton}
+          onClick={() => dispatch({ 
+            type: 'ADD_CONDITION', 
+            groupId: filter.id, 
+            condition: createEmptyCondition() 
+          })} 
+          disabled={disabled}
+        >
+          Add Condition
         </button>
-        <button onClick={() => dispatch({ type: 'ADD_GROUP', parentId: filter.id, group: { id: '', type: 'group' } })} disabled={disabled}>
-          + Group
+        <button 
+          className={styles.addButton}
+          onClick={() => dispatch({ 
+            type: 'ADD_GROUP', 
+            parentId: filter.id, 
+            group: createEmptyGroup('and') 
+          })} 
+          disabled={disabled}
+        >
+          Add Group
         </button>
       </div>
     </div>

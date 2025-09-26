@@ -5,6 +5,7 @@ import { FilterState } from '@/types/filter';
 import { FilterAction } from '@/types/filterActions';
 import { SchemaConfig } from '@/types/schema';
 import ValueInput from '@/components/ValueInput';
+import styles from './FilterCondition.module.css';
 
 interface FilterConditionProps {
   condition: FilterState;
@@ -24,8 +25,9 @@ const FilterCondition: React.FC<FilterConditionProps> = ({
   const selectedField = field ? schema.fields[field] : null;
 
   return (
-    <div data-testid={`filter-condition-${condition.id}`}>  
+    <div className={styles.condition}>  
       <select
+        className={styles.select}
         value={field || ''}
         onChange={(e) =>
           dispatch({
@@ -45,6 +47,7 @@ const FilterCondition: React.FC<FilterConditionProps> = ({
       </select>
 
       <select
+        className={styles.select}
         value={conditionOperator || ''}
         onChange={(e) =>
           dispatch({
@@ -59,7 +62,7 @@ const FilterCondition: React.FC<FilterConditionProps> = ({
         {selectedField &&
           schema.operators[selectedField.type].map((op) => (
             <option key={op} value={op}>
-              {op}
+              {op.replace('_', ' ').toUpperCase()}
             </option>
           ))}
       </select>
@@ -82,8 +85,10 @@ const FilterCondition: React.FC<FilterConditionProps> = ({
       )}
 
       <button
+        className={styles.removeConditionButton}
         onClick={() => dispatch({ type: 'REMOVE_CONDITION', id: condition.id })}
         disabled={disabled}
+        title="Remove condition"
       >
         ×
       </button>
