@@ -2,7 +2,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 export default {
   input: 'src/index.ts',
@@ -26,7 +26,9 @@ export default {
     commonjs(),
     typescript({
       tsconfig: './tsconfig.json',
-      exclude: ['**/*.test.*', '**/*.stories.*'],
+    declaration: true,
+    declarationDir: 'dist/types',
+    exclude: ['**/*.test.*', '**/*.stories.*'],
     }),
     postcss({
       extract: 'styles.css',
