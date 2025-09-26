@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { FilterState } from '@/types/filter';
-import { SchemaConfig } from '@/types/schema';
 import { FilterAction } from '@/types/filterActions';
+import { SchemaConfig } from '@/types/schema';
+import ValueInput from '@/components/ValueInput';
 
 interface FilterConditionProps {
   condition: FilterState;
@@ -18,62 +19,72 @@ const FilterCondition: React.FC<FilterConditionProps> = ({
   dispatch,
   disabled = false,
 }) => {
-  const fieldOptions = Object.keys(schema.fields);
+  const { field, conditionOperator, value, values } = condition;
+  const fields = Object.entries(schema.fields);
+  const selectedField = field ? schema.fields[field] : null;
 
   return (
-    <div data-testid={`filter-condition-${condition.id}`}>
+    <div data-testid={`filter-condition-${condition.id}`}>  
       <select
-        value={condition.field || ''}
+        value={field || ''}
         onChange={(e) =>
           dispatch({
             type: 'UPDATE_CONDITION',
             id: condition.id,
-            updates: { field: e.target.value },
+            updates: { field: e.target.value, conditionOperator: '', value: undefined, values: undefined },
           })
         }
         disabled={disabled}
       >
-        <option value="">Select field</option>
-        {fieldOptions.map((key) => (
+        <option value="">Select Field</option>
+        {fields.map(([key, config]) => (
           <option key={key} value={key}>
-            {schema.fields[key].label}
+            {config.label}
           </option>
         ))}
       </select>
 
       <select
-        value={condition.conditionOperator || ''}
+        value={conditionOperator || ''}
         onChange={(e) =>
           dispatch({
             type: 'UPDATE_CONDITION',
             id: condition.id,
-            updates: { conditionOperator: e.target.value },
+            updates: { conditionOperator: e.target.value, value: undefined, values: undefined },
           })
         }
-        disabled={disabled || !condition.field}
+        disabled={disabled || !selectedField}
       >
-        <option value="">Select operator</option>
-        {(schema.operators[schema.fields[condition.field!].type] || []).map((op) => (
-          <option key={op} value={op}>
-            {op}
-          </option>
-        ))}
+        <option value="">Select Operator</option>
+        {selectedField &&
+          schema.operators[selectedField.type].map((op) => (
+            <option key={op} value={op}>
+              {op}
+            </option>
+          ))}
       </select>
 
-      <input
-        type="text"
-        value={condition.value as string || ''}
-        onChange={(e) =>
-          dispatch({
-            type: 'UPDATE_CONDITION',
-            id: condition.id,
-            updates: { value: e.target.value },
-          })
-        }
-        disabled={disabled || !condition.conditionOperator}
-      />
+      {selectedField && conditionOperator && (
+        <ValueInput
+          fieldConfig={selectedField}
+          operator={conditionOperator}
+          value={value}
+          values={values}
+          onChange={(val, vals) =>
+            dispatch({
+              type: 'UPDATE_CONDITION',
+              id: condition.id,
+              updates: { value: val, values: vals },
+            })
+          }
+          disabled={disabled}
+        />
+      )}
 
-      <button onClick={() => dispatch({ type: 'REMOVE_CONDITION', id: condition.id })} disabled={disabled}>
+      <button
+        onClick={() => dispatch({ type: 'REMOVE_CONDITION', id: condition.id })}
+        disabled={disabled}
+      >
         ×
       </button>
     </div>
