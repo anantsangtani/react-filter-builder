@@ -4,7 +4,7 @@ A comprehensive, reusable Filter Builder UI library built with React and TypeScr
 
 ## 🎯 Overview
 
-This project implements a **dataset-agnostic Filter Builder** that based on below key requirements:
+This project implements a **dataset-agnostic Filter Builder** based on the following key requirements:
 
 - ✅ **Reusable Component Library** - Works with any data schema
 - ✅ **Nested Conditions Support** - Unlimited depth AND/OR groups
@@ -33,7 +33,7 @@ This project implements a **dataset-agnostic Filter Builder** that based on belo
    npm install
    ```
 
-3. **Build react-filter-builder Library:**
+3. **Build the react-filter-builder library:**
    ```bash
    npm run build
    ```
@@ -57,10 +57,10 @@ This project implements a **dataset-agnostic Filter Builder** that based on belo
 ### 2. **Building Filters - Two-Panel Interface**
 
 #### **Left Panel: Filter Navigation Tree** 🌳
-- Shows hierarchical structure of your filter groups
+- Shows the hierarchical structure of your filter groups
 - **Root Group**: Top-level container for all conditions
 - **Child Groups**: Nested AND/OR groups for complex logic
-- **Condition Count**: Shows number of conditions in each group
+- **Condition Count**: Shows the number of conditions in each group
 - **Remove Groups**: Click the red × button to delete groups
 
 #### **Right Panel: Current Group Editor** ⚙️
@@ -74,7 +74,7 @@ This project implements a **dataset-agnostic Filter Builder** that based on belo
 #### **Basic Condition Creation:**
 1. Click **"+ Add Condition"**
 2. **Select Field**: Choose from available fields (name, age, category, etc.)
-3. **Choose Operator**: Pick comparison operator (equals, greater than, contains, etc.)
+3. **Choose Operator**: Pick a comparison operator (equals, greater than, contains, etc.)
 4. **Enter Value**: Provide the comparison value
 
 #### **Advanced Operators:**
@@ -84,9 +84,9 @@ This project implements a **dataset-agnostic Filter Builder** that based on belo
 
 ### 4. **Creating Nested Groups**
 1. Click **"+ Add Group"** to create nested logic
-2. **Automatic Navigation**: System switches to the new group automatically
+2. **Automatic Navigation**: The system switches to the new group automatically
 3. **Add Conditions**: Build conditions within the nested group
-4. **Navigate Back**: Use breadcrumb or tree navigation to return to parent
+4. **Navigate Back**: Use breadcrumb or tree navigation to return to the parent
 
 ### 5. **Example Usage Scenarios**
 
@@ -166,7 +166,6 @@ Run the comprehensive test suite:
 ```bash
 # Run all tests
 npm test
-
 ```
 
 **Test Coverage Includes:**
