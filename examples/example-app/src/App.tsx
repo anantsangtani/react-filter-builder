@@ -71,14 +71,14 @@ function App() {
         <div className="header-content">
           <div className="header-left">
             <div className="logo">
-              <h1 className="logo-text">Advanced Filter Builder</h1>
+              <h1 className="logo-text">🔍 Advanced Filter Builder</h1>
             </div>
             <p className="header-subtitle">
               Build complex queries with an intuitive visual interface
             </p>
           </div>
           
-          <div className="header-actions">
+          {/* <div className="header-actions">
             <button 
               className="clear-btn"
               onClick={clearFilter}
@@ -86,7 +86,7 @@ function App() {
             >
               Clear
             </button>
-          </div>
+          </div> */}
         </div>
       </header>
 

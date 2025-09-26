@@ -920,12 +920,13 @@ body {
 .filter-container {
   background: var(--color-surface);
   border-radius: var(--radius-base);
-  padding: 0;
-  border: 1px solid var(--color-card-border);
-  overflow-y: hidden;
-  min-height: 600px;
-  max-height: auto;
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden; /* Hide any overflow */
+  box-shadow: var(--shadow-lg);
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Allow shrinking */
 }
 
 /* Mobile portrait responsive design */

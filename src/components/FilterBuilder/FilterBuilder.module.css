@@ -739,13 +739,13 @@ select.form-control {
 
 .container {
   display: flex;
-  height: 600px;
+  height: 100%; 
   background: transparent;
   color: var(--color-text);
   font-family: var(--font-family-base);
   border-radius: 0;
   border: none;
-  overflow: hidden;
+  overflow: hidden; 
   font-size: var(--font-size-lg);
 }
 
