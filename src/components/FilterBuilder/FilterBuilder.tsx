@@ -17,7 +17,8 @@ const FilterBuilder: React.FC<FilterBuilderProps> = ({
   validation,
 }) => {
   // Convert JSON to state if provided
-  const initialState = initialFilter ? deserializeFilter(initialFilter) : undefined;
+  const hasInitial = initialFilter && Object.keys(initialFilter).length > 0;
+  const initialState = hasInitial ? deserializeFilter(initialFilter!) : undefined;
   const [filterState, dispatch] = useFilterState(initialState);
 
   // Emit changes

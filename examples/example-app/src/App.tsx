@@ -5,7 +5,7 @@ import { usersSchema } from './schemas';
 import './index.css';
 
 function App() {
-  const initialFilter = { and: [{ field: 'age', operator: 'gt', value: 18 }] };
+  const initialFilter = {};
 
   const handleFilterChange = (filter: any, qs?: string) => {
     console.log('Filter JSON:', filter);
