@@ -2,9 +2,9 @@
 
 A comprehensive, reusable Filter Builder UI library built with React and TypeScript that allows users to construct complex nested filtering conditions with an intuitive visual interface.
 
-## 🎯 Challenge Overview
+## 🎯 Overview
 
-This project implements a **dataset-agnostic Filter Builder** that meets all the requirements specified in the frontend coding challenge:
+This project implements a **dataset-agnostic Filter Builder** that based on below key requirements:
 
 - ✅ **Reusable Component Library** - Works with any data schema
 - ✅ **Nested Conditions Support** - Unlimited depth AND/OR groups
@@ -33,27 +33,26 @@ This project implements a **dataset-agnostic Filter Builder** that meets all the
    npm install
    ```
 
-3. **Start development server:**
+3. **Build react-filter-builder Library:**
    ```bash
-   npm run dev
+   npm run build
    ```
 
 4. **Run the example application:**
    ```bash
    cd examples/example-app
    npm install
-   npm start
+   npm run dev
    ```
 
 5. **Open your browser:**
-   Navigate to `http://localhost:3000` to see the Filter Builder in action.
+   Navigate to `http://localhost:5173` to see the Filter Builder in action.
 
 ## 📱 How to Use the Application
 
 ### 1. **Dataset Selection**
 - **Choose Dataset**: Use the dropdown in the control bar to switch between "Users Dataset" and "Products Dataset"
 - **Load Examples**: Select from pre-built filter examples using the "Quick Start" dropdown
-- **Clear Filters**: Click the "Clear" button in the header to reset all filters
 
 ### 2. **Building Filters - Two-Panel Interface**
 
@@ -168,11 +167,6 @@ Run the comprehensive test suite:
 # Run all tests
 npm test
 
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
 ```
 
 **Test Coverage Includes:**
@@ -204,30 +198,6 @@ const mySchema = {
   }
 };
 ```
-
-## 🏆 Challenge Requirements Met
-
-### ✅ **Core Requirements:**
-- [x] **Configurable Schema**: Supports any field types and operators
-- [x] **Nested Conditions**: Unlimited depth AND/OR groups
-- [x] **JSON Serialization**: Converts to specified target format
-- [x] **API Integration**: GET query string and POST JSON body support
-- [x] **TypeScript**: Full type safety implementation
-
-### ✅ **Advanced Features:**
-- [x] **Two-Panel UI**: Intuitive navigation and editing interface
-- [x] **Enhanced Operators**: between, in, is_null support with proper validation
-- [x] **Real-time Validation**: Comprehensive error checking
-- [x] **Multiple Datasets**: Users and Products example schemas
-- [x] **Responsive Design**: Mobile and desktop compatible
-- [x] **Professional UI**: Modern glassmorphism design
-
-### ✅ **Technical Excellence:**
-- [x] **Clean Code**: Well-structured, maintainable codebase
-- [x] **Performance**: Optimized rendering and state management
-- [x] **Accessibility**: ARIA labels and keyboard navigation
-- [x] **Testing**: Comprehensive unit and integration tests
-- [x] **Documentation**: Complete API reference and usage guide
 
 ## 📊 Project Structure
 
